@@ -1,0 +1,20 @@
+# Private corpus metadata, queries, indexes and local work records.
+/private/
+/runtime-data/
+
+# Downloaded models and generated releases are distributed separately.
+/models/
+/dist/
+/build/
+
+# Local Python environment and caches.
+/.venv/
+__pycache__/
+.pytest_cache/
+*.py[cod]
+*.egg-info/
+
+# Local credentials.
+.env
+.env.*
+!.env.example

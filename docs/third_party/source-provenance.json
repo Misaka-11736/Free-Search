@@ -1,0 +1,499 @@
+{
+  "schema_version": 1,
+  "inspected_on": "2026-10-21",
+  "target": "Windows x64 / Python 3.12 / Free Search 0.1.0",
+  "scope": "Retained native dependency provenance; not a legal certification or a claim of a bit-for-bit reproducible rebuild",
+  "application_source_license": "MIT",
+  "distributed_media_combination_license": "GPL-3.0-or-later; retain all original component terms; details in BINARY_SOURCES.md",
+  "source_asset": "FreeSearch-dependency-sources.zip",
+  "source_total_bytes": 354780612,
+  "pyav_wheel": {
+    "version": "19.0.1",
+    "filename": "av-19.0.1-cp312-abi3-win_amd64.whl",
+    "source_url": "https://files.pythonhosted.org/packages/e6/dc/a87a5a5e3ac462734f9befd8bad1447301e5802d8c111e22bf708fba7af3/av-19.0.1-cp312-abi3-win_amd64.whl",
+    "sha256": "906fc3db09288319a75ea23ffefb59961c7dbe0d1c074601507a89de7d8593d8",
+    "binary_files": [
+      {
+        "path": "av.libs/avcodec-63-2756d4fffb772585dcdece87427716a4.dll",
+        "sha256": "8e13fdedbeefb6a8b5d22b567122ec3c00384add569de9e589e53a86bd08422c",
+        "matches_official_wheel": true
+      },
+      {
+        "path": "av.libs/avdevice-63-2b26d22512639c049532c0bc6f6c022f.dll",
+        "sha256": "43247c1bdaaec40977738037fdea7e8b779b3e93213dd529b1d25735b3099d8c",
+        "matches_official_wheel": true
+      },
+      {
+        "path": "av.libs/avfilter-12-87c7677b784d3ea4ecceb3e6cae9c9f1.dll",
+        "sha256": "a9b9e84178dd73162f47a3a531c321fad955ca3a7ff04a9517db7e7c78bf9ab2",
+        "matches_official_wheel": true
+      },
+      {
+        "path": "av.libs/avformat-63-e8c4f8fc30664f2b7e85dcc683bd4b0d.dll",
+        "sha256": "49759edae5286f10e4b11a442f51fb70bacde1f92b7b876038231c4d8140c506",
+        "matches_official_wheel": true
+      },
+      {
+        "path": "av.libs/avutil-61-e540ec7976bbd26a4a94dc737be3001c.dll",
+        "sha256": "ff2ba1b0d884336d53f1aee7b05873c5a3bbb987d0ffc79a49b92ed77579cd19",
+        "matches_official_wheel": true
+      },
+      {
+        "path": "av.libs/libdav1d-5469d6ef7baf7426269a9483c24587b7.dll",
+        "sha256": "5469d6ef7baf7426269a9483c24587b77bf6cb6a005f2bd98443a396f528e82b",
+        "matches_official_wheel": true
+      },
+      {
+        "path": "av.libs/libgcc_s_seh-1-3e3b83c1f8de213bb810010a5622b180.dll",
+        "sha256": "502e8318a096f0bfb26d9f628f768bfab72853eabc1b6b262f2412263aad605b",
+        "matches_official_wheel": true
+      },
+      {
+        "path": "av.libs/libiconv-2-5e7e51fe6a6e182df6c9f30f41700345.dll",
+        "sha256": "5e7e51fe6a6e182df6c9f30f4170034575acd10d2079c3f1098411d21a311619",
+        "matches_official_wheel": true
+      },
+      {
+        "path": "av.libs/libopus-0-278e2dd25a2793d306204c9d966fe0de.dll",
+        "sha256": "278e2dd25a2793d306204c9d966fe0dee6b4f56659b1ea7b759897e406980d79",
+        "matches_official_wheel": true
+      },
+      {
+        "path": "av.libs/libsharpyuv-90c3f670f207c806d3e44db799e78832.dll",
+        "sha256": "90c3f670f207c806d3e44db799e78832750826c47a0cf8dea907603d240f9dbe",
+        "matches_official_wheel": true
+      },
+      {
+        "path": "av.libs/libstdc++-6-7ad22040206bf70776b13a24ec3f87b2.dll",
+        "sha256": "1cba2ca3b6f410fa4b03b01b479f7663493ea9903857cd753dc8dbc772f67447",
+        "matches_official_wheel": true
+      },
+      {
+        "path": "av.libs/libSvtAv1Enc-7a2b2046575991edd70ef501ca085458.dll",
+        "sha256": "7a2b2046575991edd70ef501ca085458ebdff3bf96282350057ae1dee0afaf9f",
+        "matches_official_wheel": true
+      },
+      {
+        "path": "av.libs/libvmaf-e1698aa5c58a07400697833b5f19b0a3.dll",
+        "sha256": "12e93e157295be651758eee56af4ed95c6a2ee5b3b91c65a83c8c6818af4c35f",
+        "matches_official_wheel": true
+      },
+      {
+        "path": "av.libs/libvpl-45cd70cb42c579529a30ad6fc282c626.dll",
+        "sha256": "1a0bc607afbd8a224cc0c2db6fd5efa51245d7715ff1b659c16b47e773009115",
+        "matches_official_wheel": true
+      },
+      {
+        "path": "av.libs/libvpx-1-dd81d2b55a771749d485047772201cc1.dll",
+        "sha256": "738629b026940c256dfe988a62062bdc96ae5065d13163bf7e579dc95a4634f4",
+        "matches_official_wheel": true
+      },
+      {
+        "path": "av.libs/libwebp-abac96c4759f9eb9b31588c8a839816c.dll",
+        "sha256": "e253a4adb1c133a690662e46d8c41e0a3b81b0e62d0f3a5e1a1109484a020dca",
+        "matches_official_wheel": true
+      },
+      {
+        "path": "av.libs/libwebpmux-0b9545d83accdb1110a7efa5d1c54007.dll",
+        "sha256": "ce17228391b86192f201da1ce9c345ff5f7a9c1eca95ab04150491c24032f74e",
+        "matches_official_wheel": true
+      },
+      {
+        "path": "av.libs/libwinpthread-1-3e9f18fdf7e856e1e9fedd138e84e874.dll",
+        "sha256": "3e9f18fdf7e856e1e9fedd138e84e874542e8717272fa7fdae5d0d826e88658c",
+        "matches_official_wheel": true
+      },
+      {
+        "path": "av.libs/libx264-165-0f71f37cf3f3ee0e2ecac2b06829e9ff.dll",
+        "sha256": "0f71f37cf3f3ee0e2ecac2b06829e9ff3cf2b3e237f25bb14aef6b8de14cd777",
+        "matches_official_wheel": true
+      },
+      {
+        "path": "av.libs/libx265-ee9d492f3fb55d0a3b564bb1bf4f6822.dll",
+        "sha256": "efe075f1ee008c722eb71adfe00d926071836d777cc9ef23b59c9ecb9db7d57f",
+        "matches_official_wheel": true
+      },
+      {
+        "path": "av.libs/swresample-7-4f9462a1fb73b949ccad2774dd941624.dll",
+        "sha256": "a8bfee136c4c4e49d95b4439b1b80136504b2783cf93638f64bd3ad7de8e0ebe",
+        "matches_official_wheel": true
+      },
+      {
+        "path": "av.libs/swscale-10-9af0a10ad7003982e48548ff39e98465.dll",
+        "sha256": "f2956978470b3ed26c4f5db80b45d4c3a9188a4a8622133f73ded71504df85d6",
+        "matches_official_wheel": true
+      },
+      {
+        "path": "av.libs/zlib1-4d767210e087ff082d94ef0a09ddc7f8.dll",
+        "sha256": "4d767210e087ff082d94ef0a09ddc7f8c04316c64d69d5a7b9ee802ceab407dd",
+        "matches_official_wheel": true
+      }
+    ]
+  },
+  "ffmpeg_recipe": {
+    "tag": "9.0.2-1",
+    "commit": "bac889417e26be29615cb6a3f38318151fed55cd",
+    "pyav_commit": "52e6691c8221a53ac1f1bf111f282cefa7d568e1",
+    "ffmpeg_version": "9.0.2",
+    "patch_sha256": "661b7f0553ae145ce6526bb5514ed0f50a699e337dcc85c6d743809685f47020",
+    "patch_effect": "Moves x264 and x265 from the GPL configure list to VERSION3. Runtime LGPL label does not replace original GPL codec terms.",
+    "runtime_config_record": "ffmpeg/build-config.json"
+  },
+  "qt_binary_files": [
+    {
+      "path": "PySide6/Qt6Core.dll",
+      "sha256": "f57ed38afd95d0306cca9d88d997f639f70c7628a4f1f064eae291d579487121",
+      "version": "6.12.0"
+    },
+    {
+      "path": "PySide6/Qt6Gui.dll",
+      "sha256": "abd20026e190e8cc69667d1bea042db05cd353cc05e7da74b063c20b7da3f6cd",
+      "version": "6.12.0"
+    },
+    {
+      "path": "PySide6/Qt6Network.dll",
+      "sha256": "1c7c393b264ae78f4dee211656377a086c4be714bf768d3135f94f11c1d0be61",
+      "version": "6.12.0"
+    },
+    {
+      "path": "PySide6/Qt6OpenGL.dll",
+      "sha256": "788b743bfaca141ca83e28c161646d51de92a71adf7a86c653c36fdea5a9bf5b",
+      "version": "6.12.0"
+    },
+    {
+      "path": "PySide6/Qt6Qml.dll",
+      "sha256": "0be9fc8ad3b7d2d19d0ed49a9026f02b78c4498ab2f53ca574d34a0740d7888a",
+      "version": "6.12.0"
+    },
+    {
+      "path": "PySide6/Qt6QmlMeta.dll",
+      "sha256": "6edac38b27868e69c8ae15b08145688b02358426d5d652a0d2865ca4476fde0a",
+      "version": "6.12.0"
+    },
+    {
+      "path": "PySide6/Qt6QmlModels.dll",
+      "sha256": "78e79eee241326da0754e29f4b372dee9ff7b75f3484099504c4750ac1f519e6",
+      "version": "6.12.0"
+    },
+    {
+      "path": "PySide6/Qt6QmlWorkerScript.dll",
+      "sha256": "475456ab8f1e9570f5f5f496b0941445a34fca4bbac0dd07ea84ee5ea15e7194",
+      "version": "6.12.0"
+    },
+    {
+      "path": "PySide6/Qt6Quick.dll",
+      "sha256": "3c93688f36ad4e5c5c2fd73587f50ee94e1dfa4891805bbe5d6d0c031450faa2",
+      "version": "6.12.0"
+    },
+    {
+      "path": "PySide6/Qt6Svg.dll",
+      "sha256": "8f1de5b28aab1eedb415c751c81f9cfaa2804242868c0ceea5f3fdb4b2babca4",
+      "version": "6.12.0"
+    },
+    {
+      "path": "PySide6/Qt6Widgets.dll",
+      "sha256": "2f62cbe2869fff4e20df7369c2786e1ec7ec290d5a63d1371b7f70cf06909c3f",
+      "version": "6.12.0"
+    }
+  ],
+  "ocr_weight_files": [
+    {
+      "path": "rapidocr_onnxruntime/models/ch_PP-OCRv4_det_infer.onnx",
+      "bytes": 4745517,
+      "sha256": "d2a7720d45a54257208b1e13e36a8479894cb74155a5efe29462512d42f49da9"
+    },
+    {
+      "path": "rapidocr_onnxruntime/models/ch_PP-OCRv4_rec_infer.onnx",
+      "bytes": 10857958,
+      "sha256": "48fc40f24f6d2a207a2b1091d3437eb3cc3eb6b676dc3ef9c37384005483683b"
+    },
+    {
+      "path": "rapidocr_onnxruntime/models/ch_ppocr_mobile_v2.0_cls_infer.onnx",
+      "bytes": 585532,
+      "sha256": "e47acedf663230f8863ff1ab0e64dd2d82b838fceb5957146dab185a89d6215c"
+    }
+  ],
+  "other_native_components": [
+    {
+      "name": "pypdfium2",
+      "version": "5.14.0",
+      "pdfium_version": "156.0.8076.0",
+      "source_url": "https://github.com/bblanchon/pdfium-binaries/releases/tag/chromium%2F8076",
+      "notices": "pypdfium2-5.14.0.dist-info/licenses/data/windows_x64/BUILD_LICENSES",
+      "license": "BSD-3-Clause and listed third-party terms"
+    },
+    {
+      "name": "RapidOCR",
+      "version": "1.4.4",
+      "source_url": "https://pypi.org/project/rapidocr-onnxruntime/1.4.4/",
+      "license": "Apache-2.0",
+      "paddleocr_notice": "paddleocr/LICENSE",
+      "paddleocr_notice_source_url": "https://raw.githubusercontent.com/PaddlePaddle/PaddleOCR/19ad3d9557f2769f9df2984e391e328b441837f7/LICENSE",
+      "paddleocr_notice_sha256": "ff6311c56c1b22c9209c96cc8afc16da91c24ee55a15e14ebc46fe1960dbd856"
+    },
+    {
+      "name": "ONNX Runtime",
+      "version": "1.31.0",
+      "source_url": "https://github.com/microsoft/onnxruntime/tree/v1.31.0",
+      "license": "MIT and ThirdPartyNotices.txt"
+    },
+    {
+      "name": "OpenCV",
+      "version": "5.0.0.93",
+      "source_url": "https://github.com/opencv/opencv-python",
+      "license": "Apache-2.0 and LICENSE-3RD-PARTY.txt",
+      "video_ffmpeg_plugin_distributed": false
+    },
+    {
+      "name": "CTranslate2",
+      "version": "4.8.3",
+      "source_url": "https://github.com/OpenNMT/CTranslate2/tree/v4.8.3",
+      "license": "MIT and bundled third-party notices"
+    }
+  ],
+  "excluded_from_final_installer": [
+    "PySide6/Qt6VirtualKeyboard.dll",
+    "PySide6/plugins/platforminputcontexts/qtvirtualkeyboardplugin.dll",
+    "PySide6/Qt6Pdf.dll",
+    "PySide6/plugins/imageformats/qpdf.dll",
+    "cv2/opencv_videoio_ffmpeg500_64.dll",
+    "soundfile and _soundfile_data",
+    "sounddevice and _sounddevice_data"
+  ],
+  "source_archives": [
+    {
+      "component": "amf-headers",
+      "version": "1.5.2",
+      "filename": "AMF-headers-v1.5.2.tar.gz",
+      "source_url": "https://github.com/GPUOpen-LibrariesAndSDKs/AMF/releases/download/v1.5.2/AMF-headers-v1.5.2.tar.gz",
+      "sha256": "d3c12eb324edf05e214608b6a395a51dd95770ed9d45520185d6c3a206811c99",
+      "bytes": 83716,
+      "hash_basis": "Exact hash in pyav-ffmpeg/scripts/pkg.py at bac889417e26be29615cb6a3f38318151fed55cd"
+    },
+    {
+      "component": "dav1d",
+      "version": "1.5.4",
+      "filename": "dav1d-1.5.4.tar.bz2",
+      "source_url": "https://code.videolan.org/videolan/dav1d/-/archive/1.5.4/dav1d-1.5.4.tar.bz2",
+      "sha256": "2abfb0c89212e6e4733a54e0ae509ec00a5b845a6360946f918806e14aedb011",
+      "bytes": 1228274,
+      "hash_basis": "Exact hash in pyav-ffmpeg/scripts/pkg.py at bac889417e26be29615cb6a3f38318151fed55cd"
+    },
+    {
+      "component": "ffmpeg",
+      "version": "9.0.2 + vendor patch",
+      "filename": "ffmpeg-9.0.2.tar.xz",
+      "source_url": "https://ffmpeg.org/releases/ffmpeg-9.0.2.tar.xz",
+      "sha256": "8c3850283eb25fa026482078a04051e0be17347b09ef81a0849bec15a96e002e",
+      "bytes": 12040788,
+      "hash_basis": "Exact hash in pyav-ffmpeg/scripts/pkg.py at bac889417e26be29615cb6a3f38318151fed55cd"
+    },
+    {
+      "component": "GCC runtimes",
+      "version": "MSYS2 16.1.0-5",
+      "filename": "mingw-w64-gcc-16.1.0-5.src.tar.zst",
+      "source_url": "https://repo.msys2.org/mingw/sources/mingw-w64-gcc-16.1.0-5.src.tar.zst",
+      "sha256": "947166ed372d28ab8ffa25a66bc5e37a60a42e96a686424ce58cad304fcaea15",
+      "bytes": 102479270,
+      "hash_basis": "SHA256 of the exact official upstream archive retrieved over HTTPS"
+    },
+    {
+      "component": "lamer",
+      "version": "3.101.0",
+      "filename": "lamer-3.101.0.tar.gz",
+      "source_url": "https://github.com/basswood-io/lamer/archive/refs/tags/v3.101.0.tar.gz",
+      "sha256": "81839b16fdc401e20b73389d05f32a7656008f43bcb960feff290d6f08fc109e",
+      "bytes": 404497,
+      "hash_basis": "Exact hash in pyav-ffmpeg/scripts/pkg.py at bac889417e26be29615cb6a3f38318151fed55cd"
+    },
+    {
+      "component": "libiconv",
+      "version": "MSYS2 1.19-1",
+      "filename": "libiconv-msys2.src.tar.zst",
+      "source_url": "https://repo.msys2.org/mingw/sources/mingw-w64-libiconv-1.19-1.src.tar.zst",
+      "sha256": "74428280c17094da5b702c29b2e1a0abae59556ea5dfdd65705cc8ccc1e000fb",
+      "bytes": 5131029,
+      "hash_basis": "SHA256 of the exact official upstream archive retrieved over HTTPS"
+    },
+    {
+      "component": "libsvtav1",
+      "version": "4.2.0",
+      "filename": "SVT-AV1-v4.2.0.tar.bz2",
+      "source_url": "https://gitlab.com/AOMediaCodec/SVT-AV1/-/archive/v4.2.0/SVT-AV1-v4.2.0.tar.bz2",
+      "sha256": "512f2ea5649e3e76c2dddcc25c2556fb67a9582baaab207c9c96161c94659dad",
+      "bytes": 10334915,
+      "hash_basis": "Exact hash in pyav-ffmpeg/scripts/pkg.py at bac889417e26be29615cb6a3f38318151fed55cd"
+    },
+    {
+      "component": "libvmaf",
+      "version": "3.2.1",
+      "filename": "vmaf-3.2.1.tar.gz",
+      "source_url": "https://github.com/Netflix/vmaf/archive/refs/tags/v3.2.1.tar.gz",
+      "sha256": "5df7386911bc15fd1ca783132528748d219768ae4fc5f8e0b61184f041648092",
+      "bytes": 18590364,
+      "hash_basis": "Exact hash in pyav-ffmpeg/scripts/pkg.py at bac889417e26be29615cb6a3f38318151fed55cd"
+    },
+    {
+      "component": "libvpl",
+      "version": "2.16.0",
+      "filename": "v2.16.0.tar.gz",
+      "source_url": "https://github.com/intel/libvpl/archive/refs/tags/v2.16.0.tar.gz",
+      "sha256": "d60931937426130ddad9f1975c010543f0da99e67edb1c6070656b7947f633b6",
+      "bytes": 12968334,
+      "hash_basis": "Exact hash in pyav-ffmpeg/scripts/pkg.py at bac889417e26be29615cb6a3f38318151fed55cd"
+    },
+    {
+      "component": "nv-codec-headers",
+      "version": "13.0.19.0",
+      "filename": "n13.0.19.0.tar.gz",
+      "source_url": "https://github.com/FFmpeg/nv-codec-headers/archive/refs/tags/n13.0.19.0.tar.gz",
+      "sha256": "86d15d1a7c0ac73a0eafdfc57bebfeba7da8264595bf531cf4d8db1c22940116",
+      "bytes": 83385,
+      "hash_basis": "Exact hash in pyav-ffmpeg/scripts/pkg.py at bac889417e26be29615cb6a3f38318151fed55cd"
+    },
+    {
+      "component": "opus",
+      "version": "1.6.1",
+      "filename": "opus-1.6.1.tar.gz",
+      "source_url": "https://ftp.osuosl.org/pub/xiph/releases/opus/opus-1.6.1.tar.gz",
+      "sha256": "6ffcb593207be92584df15b32466ed64bbec99109f007c82205f0194572411a1",
+      "bytes": 10472813,
+      "hash_basis": "Exact hash in pyav-ffmpeg/scripts/pkg.py at bac889417e26be29615cb6a3f38318151fed55cd"
+    },
+    {
+      "component": "png",
+      "version": "1.6.58",
+      "filename": "libpng-1.6.58.tar.xz",
+      "source_url": "https://downloads.sourceforge.net/project/libpng/libpng16/1.6.58/libpng-1.6.58.tar.xz",
+      "sha256": "28eb403f51f0f7405249132cecfe82ea5c0ef97f1b32c5a65828814ae0d34775",
+      "bytes": 1070096,
+      "hash_basis": "Exact hash in pyav-ffmpeg/scripts/pkg.py at bac889417e26be29615cb6a3f38318151fed55cd"
+    },
+    {
+      "component": "PyAV",
+      "version": "19.0.1",
+      "filename": "pyav-19.0.1.tar.gz",
+      "source_url": "https://codeload.github.com/PyAV-Org/PyAV/tar.gz/52e6691c8221a53ac1f1bf111f282cefa7d568e1",
+      "sha256": "51ca5fc46c141df687035aa3332b62eff60cdcd8c2e8df2ac8be8ceea6404d1b",
+      "bytes": 290036,
+      "hash_basis": "SHA256 of the exact official upstream archive retrieved over HTTPS"
+    },
+    {
+      "component": "pyav-ffmpeg build recipe",
+      "version": "bac889417e26be29615cb6a3f38318151fed55cd",
+      "filename": "pyav-ffmpeg-bac889417e26.tar.gz",
+      "source_url": "https://codeload.github.com/PyAV-Org/pyav-ffmpeg/tar.gz/bac889417e26be29615cb6a3f38318151fed55cd",
+      "sha256": "18cb507f2651902bbd824aec838262a6ac2c85a9883b629360322acadd4c4bfd",
+      "bytes": 20729,
+      "hash_basis": "SHA256 of the exact official upstream archive retrieved over HTTPS"
+    },
+    {
+      "component": "PySide6/Shiboken6",
+      "version": "6.12.0",
+      "filename": "pyside-setup-everywhere-src-6.12.0.tar.xz",
+      "source_url": "https://download.qt.io/official_releases/QtForPython/pyside6/PySide6-6.12.0-src/pyside-setup-everywhere-src-6.12.0.tar.xz",
+      "sha256": "099c1a597cf33c1b000e11cf68a0b82d216fb802bf81726efc720394f10c7751",
+      "bytes": 18211772,
+      "hash_basis": "SHA256 of the exact official upstream archive retrieved over HTTPS"
+    },
+    {
+      "component": "qtbase",
+      "version": "6.12.0",
+      "filename": "qtbase-everywhere-src-6.12.0.tar.xz",
+      "source_url": "https://download.qt.io/official_releases/qt/6.12/6.12.0/submodules/qtbase-everywhere-src-6.12.0.tar.xz",
+      "sha256": "a951bd163c7b80fc6b8c88d7668fb56abf91c152373e13c10666763238131307",
+      "bytes": 51220268,
+      "hash_basis": "SHA256 of the exact official upstream archive retrieved over HTTPS"
+    },
+    {
+      "component": "qtdeclarative",
+      "version": "6.12.0",
+      "filename": "qtdeclarative-everywhere-src-6.12.0.tar.xz",
+      "source_url": "https://download.qt.io/official_releases/qt/6.12/6.12.0/submodules/qtdeclarative-everywhere-src-6.12.0.tar.xz",
+      "sha256": "311f3a2603e1973bb59baef9dfa740a376de713157d4782ee043681e889c9260",
+      "bytes": 39221652,
+      "hash_basis": "SHA256 of the exact official upstream archive retrieved over HTTPS"
+    },
+    {
+      "component": "qtimageformats",
+      "version": "6.12.0",
+      "filename": "qtimageformats-everywhere-src-6.12.0.tar.xz",
+      "source_url": "https://download.qt.io/official_releases/qt/6.12/6.12.0/submodules/qtimageformats-everywhere-src-6.12.0.tar.xz",
+      "sha256": "0943132b5db8de6b6a7f1d162682173e8763c7ed94e80fd39113292845f67762",
+      "bytes": 1848620,
+      "hash_basis": "SHA256 of the exact official upstream archive retrieved over HTTPS"
+    },
+    {
+      "component": "qtshadertools",
+      "version": "6.12.0",
+      "filename": "qtshadertools-everywhere-src-6.12.0.tar.xz",
+      "source_url": "https://download.qt.io/official_releases/qt/6.12/6.12.0/submodules/qtshadertools-everywhere-src-6.12.0.tar.xz",
+      "sha256": "c7d84f436e1aaef39fdcadebf2bd71bdf24dc69497e13f2e0198873cbbfea2ab",
+      "bytes": 1244684,
+      "hash_basis": "SHA256 of the exact official upstream archive retrieved over HTTPS"
+    },
+    {
+      "component": "qtsvg",
+      "version": "6.12.0",
+      "filename": "qtsvg-everywhere-src-6.12.0.tar.xz",
+      "source_url": "https://download.qt.io/official_releases/qt/6.12/6.12.0/submodules/qtsvg-everywhere-src-6.12.0.tar.xz",
+      "sha256": "e4ab39534ec97987b1b9b60ef7f4d3253d5912a69f8c713a01753174a4029331",
+      "bytes": 2341876,
+      "hash_basis": "SHA256 of the exact official upstream archive retrieved over HTTPS"
+    },
+    {
+      "component": "vpx",
+      "version": "1.17.0",
+      "filename": "vpx-1.17.0.tar.gz",
+      "source_url": "https://github.com/webmproject/libvpx/archive/refs/tags/v1.17.0.tar.gz",
+      "sha256": "1020f184046187baa2985dbde38e0691f49c44088bca7a1842b0236c6081dc0a",
+      "bytes": 5670546,
+      "hash_basis": "Exact hash in pyav-ffmpeg/scripts/pkg.py at bac889417e26be29615cb6a3f38318151fed55cd"
+    },
+    {
+      "component": "webp",
+      "version": "1.6.0",
+      "filename": "webp-1.6.0.tar.gz",
+      "source_url": "https://github.com/webmproject/libwebp/archive/refs/tags/v1.6.0.tar.gz",
+      "sha256": "93a852c2b3efafee3723efd4636de855b46f9fe1efddd607e1f42f60fc8f2136",
+      "bytes": 3833512,
+      "hash_basis": "Exact hash in pyav-ffmpeg/scripts/pkg.py at bac889417e26be29615cb6a3f38318151fed55cd"
+    },
+    {
+      "component": "winpthreads",
+      "version": "MSYS2 14.0.0.r98.g19f5121a2-1; code/data also match r92",
+      "filename": "mingw-w64-winpthreads-14.0.0.r98.g19f5121a2-1.src.tar.zst",
+      "source_url": "https://repo.msys2.org/mingw/sources/mingw-w64-winpthreads-14.0.0.r98.g19f5121a2-1.src.tar.zst",
+      "sha256": "b1444443b523b4e5264b40737d57f0e02eef957ca6ca05d771a033ecc8a81e4e",
+      "bytes": 51762230,
+      "hash_basis": "SHA256 of the exact official upstream archive retrieved over HTTPS"
+    },
+    {
+      "component": "x264",
+      "version": "b35605ace3ddf7c1a5d67a2eb553f034aef41d55",
+      "filename": "x264-b35605ace3ddf7c1a5d67a2eb553f034aef41d55.tar.bz2",
+      "source_url": "https://code.videolan.org/videolan/x264/-/archive/b35605ace3ddf7c1a5d67a2eb553f034aef41d55/x264-b35605ace3ddf7c1a5d67a2eb553f034aef41d55.tar.bz2",
+      "sha256": "6eeb82934e69fd51e043bd8c5b0d152839638d1ce7aa4eea65a3fedcf83ff224",
+      "bytes": 848719,
+      "hash_basis": "Exact hash in pyav-ffmpeg/scripts/pkg.py at bac889417e26be29615cb6a3f38318151fed55cd"
+    },
+    {
+      "component": "x265",
+      "version": "4.3",
+      "filename": "x265_4.3.tar.gz",
+      "source_url": "https://github.com/Multicorewareinc/x265/releases/download/4.3/x265_4.3.tar.gz",
+      "sha256": "83c53e4c8bbb8f1e33ed59e10a7d621d1d7801ca853910c3eb41f038b8ffb121",
+      "bytes": 2052112,
+      "hash_basis": "Exact hash in pyav-ffmpeg/scripts/pkg.py at bac889417e26be29615cb6a3f38318151fed55cd"
+    },
+    {
+      "component": "zlib",
+      "version": "MSYS2 1.3.2-2",
+      "filename": "mingw-w64-zlib-1.3.2-2.src.tar.zst",
+      "source_url": "https://repo.msys2.org/mingw/sources/mingw-w64-zlib-1.3.2-2.src.tar.zst",
+      "sha256": "eef69dea52357e01b272d6fd6dc4d7c0773f71260cb7bcde6047c8c383518db3",
+      "bytes": 1326375,
+      "hash_basis": "SHA256 of the exact official upstream archive retrieved over HTTPS"
+    }
+  ]
+}

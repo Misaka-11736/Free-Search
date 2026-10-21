@@ -1,0 +1,4 @@
+# Preserve the byte hashes of upstream notices and provenance records.
+* text=auto eol=lf
+docs/third_party/** -text
+packaging/ChineseSimplified.isl -text

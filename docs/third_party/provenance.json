@@ -1,0 +1,98 @@
+[
+  {
+    "path": "models/text-embedding/LICENSE",
+    "source_url": "https://raw.githubusercontent.com/microsoft/unilm/master/LICENSE",
+    "revision": "master",
+    "sha256": "904dc4d8749877f1dba1cda48200d2462dccbeb7c134d5e4ef6fa75e0198c8fe"
+  },
+  {
+    "path": "models/text-reranker/LICENSE",
+    "source_url": "https://raw.githubusercontent.com/FlagOpen/FlagEmbedding/master/LICENSE",
+    "revision": "master",
+    "sha256": "587a673933425dbc36ec61268d3b954051b2d3ef3c9b322ede357976055ffdd5"
+  },
+  {
+    "path": "models/vision/LICENSE",
+    "source_url": "https://raw.githubusercontent.com/OFA-Sys/Chinese-CLIP/master/MIT-LICENSE.txt",
+    "revision": "master",
+    "sha256": "aaaac89467b2ed90ff9dedb180c43a9007b96cab2396ae5991568fc1940a49b6"
+  },
+  {
+    "path": "models/speech/LICENSE",
+    "source_url": "https://raw.githubusercontent.com/openai/whisper/main/LICENSE",
+    "revision": "main",
+    "sha256": "b5d65a59060e68c4ff940e1eddfa6f94b2d68fdf58ed7f4dd57721c997e35e9d"
+  },
+  {
+    "path": "docs/third_party/ctranslate2/LICENSE",
+    "source_url": "https://raw.githubusercontent.com/OpenNMT/CTranslate2/master/LICENSE",
+    "revision": "master",
+    "sha256": "54aa79d9fe3c09e67a16dcd95b9e88676405a6ec174efda31036983cf7672ecb"
+  },
+  {
+    "path": "docs/third_party/flatbuffers/LICENSE",
+    "source_url": "https://raw.githubusercontent.com/google/flatbuffers/master/LICENSE",
+    "revision": "master",
+    "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+  },
+  {
+    "path": "docs/third_party/jieba/LICENSE",
+    "source_url": "https://raw.githubusercontent.com/fxsjy/jieba/master/LICENSE",
+    "revision": "master",
+    "sha256": "18ba0984839f85853b29fadaf992f7dba8fd0ca0fbeae34de2b8735222dc7a37"
+  },
+  {
+    "path": "docs/third_party/lance-namespace/LICENSE",
+    "source_url": "https://raw.githubusercontent.com/lance-format/lance-namespace/main/LICENSE",
+    "revision": "main",
+    "sha256": "03c4e02af8cbe96dd3a9bfaac9ee27ec6a8e9a3ee38ed7b290d50495c11eea48"
+  },
+  {
+    "path": "docs/third_party/rapidocr/LICENSE",
+    "source_url": "https://raw.githubusercontent.com/RapidAI/RapidOCR/main/LICENSE",
+    "revision": "main",
+    "sha256": "3e0af25fdd06aa9586ae97adb00ea927ebe5a3805ac77d2d3a81ce5f55693333"
+  },
+  {
+    "path": "docs/third_party/tokenizers/LICENSE",
+    "source_url": "https://raw.githubusercontent.com/huggingface/tokenizers/main/LICENSE",
+    "revision": "main",
+    "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4"
+  },
+  {
+    "path": "docs/third_party/qt/LGPL-3.0-only.txt",
+    "source_url": "https://raw.githubusercontent.com/qt/qtbase/dev/LICENSES/LGPL-3.0-only.txt",
+    "revision": "dev",
+    "sha256": "da7eabb7bafdf7d3ae5e9f223aa5bdc1eece45ac569dc21b3b037520b4464768"
+  },
+  {
+    "path": "docs/third_party/qt/GPL-3.0-only.txt",
+    "source_url": "https://raw.githubusercontent.com/qt/qtbase/dev/LICENSES/GPL-3.0-only.txt",
+    "revision": "dev",
+    "sha256": "8ceb4b9ee5adedde47b31e975c1d90c73ad27b6b165a1dcd80c7c545eb65b903"
+  },
+  {
+    "path": "docs/third_party/ffmpeg/COPYING.LGPLv3",
+    "source_url": "https://raw.githubusercontent.com/FFmpeg/FFmpeg/master/COPYING.LGPLv3",
+    "revision": "master",
+    "sha256": "da7eabb7bafdf7d3ae5e9f223aa5bdc1eece45ac569dc21b3b037520b4464768"
+  },
+  {
+    "path": "docs/third_party/ffmpeg/COPYING.GPLv3",
+    "source_url": "https://raw.githubusercontent.com/FFmpeg/FFmpeg/master/COPYING.GPLv3",
+    "revision": "master",
+    "sha256": "8ceb4b9ee5adedde47b31e975c1d90c73ad27b6b165a1dcd80c7c545eb65b903"
+  },
+  {
+    "path": "docs/third_party/x264/COPYING",
+    "source_url": "https://raw.githubusercontent.com/mirror/x264/master/COPYING",
+    "revision": "master",
+    "sha256": "32b1062f7da84967e7019d01ab805935caa7ab7321a7ced0e30ebe75e5df1670"
+  },
+  {
+    "path": "docs/third_party/x265/COPYING",
+    "source_url": "https://raw.githubusercontent.com/videolan/x265/master/COPYING",
+    "revision": "master",
+    "sha256": "d8afb1bcc7a2cfc603683b168d6987ef0a48e59e0da3693bf55c5d33b67e2b49"
+  }
+]
