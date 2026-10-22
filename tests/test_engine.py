@@ -93,6 +93,47 @@ def test_empty_extension_filter_has_clear_error(tmp_path):
     s.close()
 
 
+def test_text_reranking_preserves_visual_match_among_many_documents(tmp_path):
+    import numpy as np
+    from PIL import Image
+
+    class MixedModels:
+        def availability(self):
+            return {"text_embedding": True, "vision": True, "text_reranker": True}
+
+        def embed_text(self, texts):
+            return np.array([[0., 1., 0.] for _ in texts], dtype=np.float32)
+
+        def embed_query(self, query):
+            return np.array([1., 0., 0.], dtype=np.float32)
+
+        def embed_images(self, images):
+            return np.array([[1., 0., 0.] for _ in images], dtype=np.float32)
+
+        def embed_vision_text(self, texts):
+            return self.embed_images(texts)
+
+        def rerank(self, query, texts):
+            return [0.] * len(texts)
+
+    root = tmp_path / "files"
+    root.mkdir()
+    for number in range(25):
+        (root / f"document-{number}.txt").write_text("Unrelated astronomy document " + str(number))
+    photo = root / "photo.png"
+    Image.new("RGB", (10, 10), "orange").save(photo)
+    search = SearchEngine(tmp_path / "db", tmp_path / "models", models=MixedModels())
+    try:
+        search.index_files([str(path) for path in root.iterdir()])
+        baseline = search.search("橙色跑车照片", mode="hybrid_no_rerank", limit=20)
+        reranked = search.search("橙色跑车照片", mode="hybrid", limit=20)
+        before = [r["path"] for r in baseline].index(str(photo))
+        assert before < 5
+        assert [r["path"] for r in reranked].index(str(photo)) == before
+    finally:
+        search.close()
+
+
 @pytest.mark.parametrize("method", ["index", "index_files"])
 def test_other_process_cannot_update_shared_index(tmp_path, method):
     root = tmp_path / "docs"

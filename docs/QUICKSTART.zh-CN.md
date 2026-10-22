@@ -1,10 +1,10 @@
-# Free Search 0.1.0-preview 快速开始
+# Free Search 0.1.0-preview.1 快速开始
 
 完整说明和限制见 [README](../README.md)，验收记录见 [VALIDATION](VALIDATION.md)。
 
 ## 安装
 
-从 [Release](https://github.com/Misaka-11736/Free-Search/releases/tag/v0.1.0-preview)
+从 [Release](https://github.com/Misaka-11736/Free-Search/releases/tag/v0.1.0-preview.1)
 下载安装 EXE 和同版本全部 BIN 数据分卷，放在同一目录，保留名称，再运行 EXE。
 不要解压 BIN，不要只下载 EXE。安装包包含全部本地模型，不需要安装 Python。
 

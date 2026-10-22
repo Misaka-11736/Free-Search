@@ -1,7 +1,7 @@
 # 仓库与发行材料
 
 本项目公开仓库：[Misaka-11736/Free-Search](https://github.com/Misaka-11736/Free-Search)。
-预览版：[v0.1.0-preview](https://github.com/Misaka-11736/Free-Search/releases/tag/v0.1.0-preview)。
+预览版：[v0.1.0-preview.1](https://github.com/Misaka-11736/Free-Search/releases/tag/v0.1.0-preview.1)。
 
 源码根目录应直接包含 README、src、tests、packaging 和 .github。
 `scripts/package_source.py` 采用显式允许列表生成 `FreeSearch-source.zip`。

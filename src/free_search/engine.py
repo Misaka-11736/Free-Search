@@ -374,9 +374,11 @@ class SearchEngine:
             for row, score in zip(textual, values):
                 row["score"] = float(score)
                 row["ranking"] = "text_reranker"
-            # Preserve image-only matches; do not describe a text reranker as visual understanding.
-            candidates = sorted(textual, key=lambda r: r["score"], reverse=True) + [
-                r for r in candidates if r not in textual]
+            # Rerank text within its existing slots so unrelated text cannot
+            # displace visual matches that a text-only model cannot assess.
+            textual_ids = {r["id"] for r in textual}
+            ordered_text = iter(sorted(textual, key=lambda r: r["score"], reverse=True))
+            candidates = [next(ordered_text) if r["id"] in textual_ids else r for r in candidates]
         if self.api is not None and query:
             candidates = self.api.rerank(query, candidates, query_source=query_source)
         results, paths = [], set()

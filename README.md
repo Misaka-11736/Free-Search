@@ -1,19 +1,21 @@
 # Free Search
 
-[下载 v0.1.0-preview](https://github.com/Misaka-11736/Free-Search/releases/tag/v0.1.0-preview) · [验证记录](docs/VALIDATION.md) · [问题反馈](https://github.com/Misaka-11736/Free-Search/issues) · [第三方源码](docs/third_party/BINARY_SOURCES.md)
+[下载 v0.1.0-preview.1](https://github.com/Misaka-11736/Free-Search/releases/tag/v0.1.0-preview.1) · [验证记录](docs/VALIDATION.md) · [问题反馈](https://github.com/Misaka-11736/Free-Search/issues) · [第三方源码](docs/third_party/BINARY_SOURCES.md)
 
 Windows 11 本机语义文件搜索工具。用一句描述查找文档正文、截图文字、图片场景或音视频中的讲话，也可以选择图片、录音文件作为查询输入。
 
 一个安装包提供 **完全离线版** 和 **API 版** 两个入口，共用本地模型和索引。默认全部在本机处理；API 版经当前会话的目录和内容类型授权后，才会发送有限文字片段进行远程重排。
 
-> 当前是 `v0.1.0-preview` 预览版。已有真实文档试点评测和本机 EXE 推理检查，仍缺干净 Windows 环境的完整验证、多模态质量验收、GPU 加速及真实付费 API 服务验证。建议先选择小目录试用。程序只读访问原始文件，索引和预览存入本地数据目录。
+本修订版修复了文字重排将纯图片结果推到末尾的问题：文字候选在原有位置之间重排，保留视觉候选的融合位置。
+
+> 当前是 `v0.1.0-preview.1` 预览版。已有真实文档试点评测和本机 EXE 推理检查，仍缺干净 Windows 环境的完整验证、多模态质量验收、GPU 加速及真实付费 API 服务验证。建议先选择小目录试用。程序只读访问原始文件，索引和预览存入本地数据目录。
 
 ## 下载与安装
 
-打开 [Release 页面](https://github.com/Misaka-11736/Free-Search/releases/tag/v0.1.0-preview)，展开 **Assets**，下载同版本的：
+打开 [Release 页面](https://github.com/Misaka-11736/Free-Search/releases/tag/v0.1.0-preview.1)，展开 **Assets**，下载同版本的：
 
-- `FreeSearch-Setup-0.1.0-preview.exe`；
-- 所有以 `FreeSearch-Setup-0.1.0-preview-` 开头、以 `.bin` 结尾的数据分卷；
+- `FreeSearch-Setup-0.1.0-preview.1.exe`；
+- 所有以 `FreeSearch-Setup-0.1.0-preview.1-` 开头、以 `.bin` 结尾的数据分卷；
 - `SHA256SUMS.txt`，用于检查下载完整性。
 
 将 EXE 和全部 BIN 放在同一目录，保留原始文件名，运行 EXE。**只有 EXE 无法安装**，BIN 无须解压。GitHub 自动生成的 `Source code (zip)` 不包含程序或模型；第三方源码附件供修改及再分发使用，普通安装不需要下载。
@@ -21,8 +23,8 @@ Windows 11 本机语义文件搜索工具。用一句描述查找文档正文、
 安装包包含四组本地模型及 OCR 模型，安装和首次推理不需要下载。可在 PowerShell 核对每个文件的 SHA256：
 
 ```powershell
-Get-FileHash .\FreeSearch-Setup-0.1.0-preview.exe -Algorithm SHA256
-Get-ChildItem .\FreeSearch-Setup-0.1.0-preview-*.bin | Get-FileHash -Algorithm SHA256
+Get-FileHash .\FreeSearch-Setup-0.1.0-preview.1.exe -Algorithm SHA256
+Get-ChildItem .\FreeSearch-Setup-0.1.0-preview.1-*.bin | Get-FileHash -Algorithm SHA256
 ```
 
 与清单逐项比较。本预览版未购买代码签名证书，Windows 可能提示未知发布者；请核对仓库、版本和校验值后决定是否运行。
@@ -132,7 +134,7 @@ API 入口默认本地处理。进入 **API 设置**，填写服务基础地址�
 | 查询耗时 | 混合重排中位 8.254 秒，P95 13.471 秒 | CPU 试点，含可能的首次加载；非性能承诺 |
 | 十万文件修改三个 | 3 个重解析、99,997 个复用、3 个计数向量输入 | 合成磁盘文件、预置索引、计数模型，禁用 ANN 维护 |
 | 媒体通路 | 8 图、1 录音、1 视频成功索引；原图回查 8/8 首位 | 功能检查，不是视觉语义质量评测 |
-| 自动化回归 | 45 项通过 | 含跨进程写锁、双入口数据目录、授权、增量与离线保护 |
+| 自动化回归 | 46 项通过 | 含跨进程写锁、双入口数据目录、授权、增量与离线保护 |
 | 冻结 EXE | 两版完成文字、图片、语音的本地索引和查询 | 本机检查，未替代干净 Windows 验收 |
 | 分卷安装器 | 实际安装、两个入口、共享索引、卸载保留数据均通过 | 临时目录，本机验证，未替代干净虚拟机 |
 
