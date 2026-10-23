@@ -1,0 +1,38 @@
+name: Photo priority installer check
+on:
+  push:
+    branches: [release-photo-priority-20261023]
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: windows-2025
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - run: python scripts/release_photo_build.py
+        env:
+          GH_TOKEN: ${{ github.token }}
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: photo-release-build
+          path: ${{ runner.temp }}/FreeSearchPhotoRelease/reports
+  verify:
+    needs: build
+    runs-on: windows-2025
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: photo-release-build
+          path: release-build-reports
+      - run: python scripts/release_photo_check.py
+        env:
+          GH_TOKEN: ${{ github.token }}
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: photo-installer-verification
+          path: ${{ runner.temp }}/FreeSearchReleaseCheck/reports
