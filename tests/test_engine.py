@@ -156,3 +156,174 @@ def test_other_process_cannot_update_shared_index(tmp_path, method):
         child.communicate("\n", timeout=10)
     assert getattr(search, method)([str(root if method == "index" else path)])["unchanged"] == 1
     search.close()
+
+
+def test_image_stage_defers_other_files_and_preserves_their_index(tmp_path, monkeypatch):
+    from free_search.extractors import Chunk
+
+    root = tmp_path / "files"
+    root.mkdir()
+    photo = root / "photo.PNG"
+    document = root / "notes.txt"
+    recording = root / "meeting.wav"
+    other = root / "archive.dat"
+    for path in (photo, document, recording, other):
+        path.write_text(path.name)
+    parsed = []
+
+    def extract_file(path, *_):
+        parsed.append(path.name)
+        return [Chunk("indexed " + path.name)]
+
+    monkeypatch.setattr("free_search.engine.extract", extract_file)
+    search = engine(tmp_path)
+    try:
+        images = search.index([str(root)], images_only=True)
+        assert images["processed"] == 1
+        assert images["deferred"] == 3
+        assert parsed == [photo.name]
+        assert search.db.execute("SELECT count(*) FROM files").fetchone()[0] == 1
+        parsed.clear()
+        complete = search.index([str(root)])
+        assert complete["processed"] == 2
+        assert complete["unchanged"] == 1
+        assert set(parsed) == {document.name, recording.name}
+        assert search.stats()["metadata_only"] == 1
+
+        photo.unlink()
+        document.unlink()
+        recording.unlink()
+        other.unlink()
+        assert search.index([str(root)], images_only=True)["deleted"] == 1
+        remaining = {row[0] for row in search.db.execute("SELECT path FROM files")}
+        assert remaining == {str(document), str(recording), str(other)}
+        assert search.index([str(root)])["deleted"] == 3
+    finally:
+        search.close()
+
+
+class CountingModels(NoModels):
+    def __init__(self):
+        self.inputs = 0
+
+    def availability(self):
+        return {"text_embedding": True}
+
+    def embed_text(self, texts):
+        import numpy as np
+        self.inputs += len(texts)
+        return np.array([[1., 0., 0.] for _ in texts], dtype=np.float32)
+
+
+def test_new_file_uses_batched_appends_without_repeated_deletes(tmp_path, monkeypatch):
+    from lancedb.table import LanceTable
+    from free_search.extractors import Chunk
+
+    path = tmp_path / "large.txt"
+    path.write_text("large document")
+    monkeypatch.setattr("free_search.engine.extract",
+                        lambda *_: [Chunk(f"passage {n}") for n in range(280)])
+    deletes = []
+    original_delete = LanceTable.delete
+
+    def delete(table, condition):
+        deletes.append(condition)
+        return original_delete(table, condition)
+
+    monkeypatch.setattr(LanceTable, "delete", delete)
+    search = SearchEngine(tmp_path / "db", tmp_path / "models", models=CountingModels())
+    writes = []
+    original_add = search._vector_add
+
+    def add(name, rows):
+        writes.append(len(rows))
+        original_add(name, rows)
+
+    monkeypatch.setattr(search, "_vector_add", add)
+    try:
+        assert search.index_files([str(path)])["embedded_chunks"] == 280
+        assert writes == [256, 24]
+        assert deletes == []
+        assert search._table("text").count_rows() == 280
+    finally:
+        search.close()
+
+
+@pytest.mark.parametrize("existing", [False, True])
+def test_partial_vector_write_retries_without_duplicates(tmp_path, monkeypatch, existing):
+    from free_search.extractors import Chunk
+
+    path = tmp_path / "document.txt"
+    path.write_text("original document")
+    search = SearchEngine(tmp_path / "db", tmp_path / "models", models=CountingModels())
+    try:
+        if existing:
+            search.index_files([str(path)])
+            previous = search.db.execute("SELECT generation FROM files").fetchone()[0]
+            path.write_text("modified document")
+        monkeypatch.setattr("free_search.engine.extract",
+                            lambda *_: [Chunk(f"passage {n}") for n in range(280)])
+        original_add = search._vector_add
+
+        def failed_add(name, rows):
+            original_add(name, rows)
+            raise RuntimeError("interrupted after append")
+
+        monkeypatch.setattr(search, "_vector_add", failed_add)
+        with pytest.raises(RuntimeError, match="interrupted after append"):
+            search.index_files([str(path)])
+        if existing:
+            row = search.db.execute("SELECT generation,status FROM files").fetchone()
+            assert tuple(row) == (previous, "ready")
+            assert search.search("original", mode="bm25")
+        else:
+            assert not search.db.execute("SELECT 1 FROM files").fetchone()
+        search.close()
+        # Reopening must also find and clean staging rows left by an earlier process.
+        search = SearchEngine(tmp_path / "db", tmp_path / "models", models=CountingModels())
+        assert search.index_files([str(path)])["processed"] == 1
+        table = search._table("text")
+        rows = table.search().select(["id", "generation"]).limit(None).to_list()
+        assert len(rows) == len({row["id"] for row in rows}) == 280
+        assert len({row["generation"] for row in rows}) == 1
+    finally:
+        search.close()
+
+
+def test_pause_during_vectors_preserves_committed_files_and_skips_deletion(tmp_path, monkeypatch):
+    from free_search.extractors import Chunk
+
+    root = tmp_path / "docs"
+    root.mkdir()
+    path = root / "large.txt"
+    removed = root / "removed.txt"
+    path.write_text("old searchable content")
+    removed.write_text("keep until complete enumeration")
+    models = CountingModels()
+    search = SearchEngine(tmp_path / "db", tmp_path / "models", models=models)
+    try:
+        search.index([str(root)])
+        old_generation = search.db.execute("SELECT generation FROM files WHERE path=?", (str(path),)).fetchone()[0]
+        removed.unlink()
+        path.write_text("new document content")
+        monkeypatch.setattr("free_search.engine.extract",
+                            lambda *_: [Chunk(f"passage {n}") for n in range(560)])
+        initial_inputs = models.inputs
+
+        def progress(stats):
+            if models.inputs - initial_inputs >= 256:
+                raise InterruptedError("pause")
+
+        with pytest.raises(InterruptedError, match="pause"):
+            search.index([str(root)], progress=progress)
+        assert models.inputs - initial_inputs == 256
+        row = search.db.execute("SELECT generation,status FROM files WHERE path=?", (str(path),)).fetchone()
+        assert tuple(row) == (old_generation, "ready")
+        assert search.db.execute("SELECT 1 FROM files WHERE path=?", (str(removed),)).fetchone()
+        assert search.search("old searchable", mode="bm25")
+        result = search.index([str(root)])
+        assert result["processed"] == 1
+        assert result["deleted"] == 1
+        assert search._table("text").count_rows() == 560
+    finally:
+        search.close()

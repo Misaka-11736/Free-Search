@@ -1,21 +1,21 @@
 # Free Search
 
-[下载 v0.1.0-preview.1](https://github.com/Misaka-11736/Free-Search/releases/tag/v0.1.0-preview.1) · [验证记录](docs/VALIDATION.md) · [问题反馈](https://github.com/Misaka-11736/Free-Search/issues) · [第三方源码](docs/third_party/BINARY_SOURCES.md)
+[下载 v0.1.0-preview.2](https://github.com/Misaka-11736/Free-Search/releases/tag/v0.1.0-preview.2) · [验证记录](docs/VALIDATION.md) · [问题反馈](https://github.com/Misaka-11736/Free-Search/issues) · [第三方源码](docs/third_party/BINARY_SOURCES.md)
 
 Windows 11 本机语义文件搜索工具。用一句描述查找文档正文、截图文字、图片场景或音视频中的讲话，也可以选择图片、录音文件作为查询输入。
 
 一个安装包提供 **完全离线版** 和 **API 版** 两个入口，共用本地模型和索引。默认全部在本机处理；API 版经当前会话的目录和内容类型授权后，才会发送有限文字片段进行远程重排。
 
-本修订版修复了文字重排将纯图片结果推到末尾的问题：文字候选在原有位置之间重排，保留视觉候选的融合位置。
+本修订版增加“先建图片索引”：先让照片可搜，再补齐文档和音视频；向量按文件清理并合并写入，减少大文档造成的重复数据库操作。此前修复的视觉候选排序保持有效。
 
-> 当前是 `v0.1.0-preview.1` 预览版。已有真实文档试点评测、本机 EXE 检查及全新 Windows Server 2025 虚拟机的安装和本地推理验证。干净 Windows 11 人工界面验收、多模态质量验收、GPU 加速及真实付费 API 服务验证仍未完成。建议先选择小目录试用。程序只读访问原始文件，索引和预览存入本地数据目录。
+> 当前是 `v0.1.0-preview.2` 预览版。已有真实文档试点评测、本机 EXE 检查及全新 Windows Server 2025 虚拟机的安装和本地推理验证。干净 Windows 11 人工界面验收、多模态质量验收、GPU 加速及真实付费 API 服务验证仍未完成。建议先选择小目录试用。程序只读访问原始文件，索引和预览存入本地数据目录。
 
 ## 下载与安装
 
-打开 [Release 页面](https://github.com/Misaka-11736/Free-Search/releases/tag/v0.1.0-preview.1)，展开 **Assets**，下载同版本的：
+打开 [Release 页面](https://github.com/Misaka-11736/Free-Search/releases/tag/v0.1.0-preview.2)，展开 **Assets**，下载同版本的：
 
-- `FreeSearch-Setup-0.1.0-preview.1.exe`；
-- 所有以 `FreeSearch-Setup-0.1.0-preview.1-` 开头、以 `.bin` 结尾的数据分卷；
+- `FreeSearch-Setup-0.1.0-preview.2.exe`；
+- 所有以 `FreeSearch-Setup-0.1.0-preview.2-` 开头、以 `.bin` 结尾的数据分卷；
 - `SHA256SUMS.txt`，用于检查下载完整性。
 
 将 EXE 和全部 BIN 放在同一目录，保留原始文件名，运行 EXE。**只有 EXE 无法安装**，BIN 无须解压。GitHub 自动生成的 `Source code (zip)` 不包含程序或模型；第三方源码附件供修改及再分发使用，普通安装不需要下载。
@@ -23,8 +23,8 @@ Windows 11 本机语义文件搜索工具。用一句描述查找文档正文、
 安装包包含四组本地模型及 OCR 模型，安装和首次推理不需要下载。可在 PowerShell 核对每个文件的 SHA256：
 
 ```powershell
-Get-FileHash .\FreeSearch-Setup-0.1.0-preview.1.exe -Algorithm SHA256
-Get-ChildItem .\FreeSearch-Setup-0.1.0-preview.1-*.bin | Get-FileHash -Algorithm SHA256
+Get-FileHash .\FreeSearch-Setup-0.1.0-preview.2.exe -Algorithm SHA256
+Get-ChildItem .\FreeSearch-Setup-0.1.0-preview.2-*.bin | Get-FileHash -Algorithm SHA256
 ```
 
 与清单逐项比较。本预览版未购买代码签名证书，Windows 可能提示未知发布者；请核对仓库、版本和校验值后决定是否运行。
@@ -53,12 +53,14 @@ Get-ChildItem .\FreeSearch-Setup-0.1.0-preview.1-*.bin | Get-FileHash -Algorithm
 
 1. 启动“完全离线版”，等待本地模型与索引检查结束。
 2. 点击 **添加目录**，先选择少量文档或截图。需要全盘搜索时点击 **添加所有固定磁盘**；其他位置也可逐个添加。
-3. 点击 **建立／增量更新索引**，查看发现、处理、未变化和失败数量。**暂停索引**在当前文件结束后停止，再次更新会复用已完成文件。
+3. 查照片时先点 **先建图片索引（推荐）**。这一阶段只解析图片，其他文件显示为“待补齐”；完成后即可搜索照片。然后点击 **补齐全部内容／增量更新** 处理文档、源码和音视频，已完成图片直接复用。也可直接选择完整索引。
 4. 描述目标内容并搜索。选中结果查看原路径、片段及页码、幻灯片、段落或秒数等位置。
 5. 双击或点击 **打开文件**、**打开所在目录**，调用系统关联应用。目前页码和秒数只提供定位线索，不自动跳转播放器。
-6. 文件变化后手动增量更新。本版没有实时监听，程序关闭时不继续扫描。
+6. 文件变化后手动增量更新。**暂停索引**会在内容整理或模型编码批次间生效；当前解析、OCR 或转写需等解析返回。已完成文件可搜索，未完成的当前文件下次重试。本版没有实时监听，程序关闭时不继续扫描。
 
 示例描述：“讨论电池散热和冷却结构的方案”“带有 Python 报错的截图”“讲到项目进度的录音”“蓝色天空和建筑物的照片”。这是用法示例，不是全部通过验证的查询。具体术语、文件名关键词、过滤条件也有帮助。
+
+全盘包含大量软件、日志和开发工具文件。若急着找某张照片，先只添加实际照片目录，图片索引完成后再扩大范围；仅图片阶段不会读取文档和音视频内容，也不会删除这些文件已有的索引。扫描时界面仍使用单个后台任务，需要先暂停或等待该阶段完成才能查询。目录枚举和图片 OCR／视觉编码本身仍有成本，照片优先不能保证立即覆盖全盘。
 
 **过滤条件需在左侧控件填写**：扩展名如 `.pdf,.docx`、绝对目录前缀、修改时间上下界。自然语言中的“上周”“PDF”不会自动变成过滤器；日期按本机时间解释，多个已填条件共同生效。
 
@@ -97,6 +99,8 @@ Get-ChildItem .\FreeSearch-Setup-0.1.0-preview.1-*.bin | Get-FileHash -Algorithm
 
 “只改三个”仍需遍历目录，但不用重解析十万份内容或重算全部向量。向量存储维护仍可能产生额外工作，增量不等于没有目录扫描。
 
+向量重试清理按文件及内容版本执行，新文件不再为每 16 个块重复发出删除查询；推理保持小批次，数据库最多积累 256 条再写入。更新时保留旧提交版本，SQLite 提交后清理旧向量；中断留下的同版本暂存向量在重试前清理。只调整写入与扫描阶段，不改变模型状态，已有内容无需因此全量重建。
+
 两个入口共用索引，同一数据目录只允许一个进程更新。建议同时只开一个入口以节省内存。移除界面目录只影响后续扫描，已有索引仍可搜索；尚无单目录清除按钮。若需彻底重建，先关闭程序，备份并删除整个数据目录，再索引保留目录。
 
 ## API 授权与隐私
@@ -134,7 +138,8 @@ API 入口默认本地处理。进入 **API 设置**，填写服务基础地址�
 | 查询耗时 | 混合重排中位 8.254 秒，P95 13.471 秒 | CPU 试点，含可能的首次加载；非性能承诺 |
 | 十万文件修改三个 | 3 个重解析、99,997 个复用、3 个计数向量输入 | 合成磁盘文件、预置索引、计数模型，禁用 ANN 维护 |
 | 媒体通路 | 8 图、1 录音、1 视频成功索引；原图回查 8/8 首位 | 功能检查，不是视觉语义质量评测 |
-| 自动化回归 | 46 项通过 | 含跨进程写锁、双入口数据目录、授权、增量与离线保护 |
+| 自动化回归 | 52 项通过 | 新增图片阶段隔离、暂停续跑、部分写入重试及数据库批次检查；另含跨进程写锁、双入口、授权与离线保护 |
+| 写入性能对比 | 1,536 个块：97 → 0 次删除，96 → 6 次写入，9.38 → 0.46 秒 | 预置 5 万向量、固定向量模型、真实数据库；不含真实推理与 ANN 维护，不能外推为全盘提速倍数 |
 | 冻结 EXE | 两版完成文字、图片、语音的本地索引和查询 | 本机检查，未替代干净 Windows 验收 |
 | 分卷安装器 | 实际安装、两个入口、共享索引、卸载保留数据均通过 | 临时目录，本机验证，未替代干净虚拟机 |
 | 云端安装器验证 | 两入口本地索引、查询、转写、OCR 和卸载通过，外网被系统防火墙规则阻止 | [全新 Windows Server 2025 虚拟机](https://github.com/Misaka-11736/Free-Search/actions/runs/39809351954)，合成样本，未替代 Windows 11 人工验收 |
@@ -151,6 +156,7 @@ API 入口默认本地处理。进入 **API 设置**，填写服务基础地址�
 $program = "$env:LOCALAPPDATA\Programs\FreeSearch\FreeSearch-offline.exe"
 Start-Process -FilePath $program -ArgumentList '--diagnose --output "D:\SearchReports\diagnostics.json"' -Wait
 Start-Process -FilePath $program -ArgumentList '--index "D:\MyDocuments" --output "D:\SearchReports\index.json"' -Wait
+Start-Process -FilePath $program -ArgumentList '--index "D:\MyPictures" --images-only --output "D:\SearchReports\images.json"' -Wait
 Start-Process -FilePath $program -ArgumentList '--query "电池冷却结构" --output "D:\SearchReports\results.json"' -Wait
 Start-Process -FilePath $program -ArgumentList '--transcribe "D:\Audio\question.wav" --output "D:\SearchReports\speech.json"' -Wait
 ```

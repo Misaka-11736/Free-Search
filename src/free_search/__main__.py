@@ -33,11 +33,14 @@ def main():
     parser.add_argument("--model-dir", type=Path, default=root / "models")
     parser.add_argument("--diagnose", action="store_true")
     parser.add_argument("--index", nargs="+")
+    parser.add_argument("--images-only", action="store_true", help="与 --index 合用：先索引图片，其他文件稍后补齐")
     parser.add_argument("--query")
     parser.add_argument("--transcribe", type=Path)
     parser.add_argument("--output", type=Path, help="将命令行结果保存为 JSON（窗口版 EXE 无终端输出）")
     parser.add_argument("--mode", choices=["bm25", "vector", "hybrid_no_rerank", "hybrid"], default="hybrid")
     args = parser.parse_args()
+    if args.images_only and not args.index:
+        parser.error("--images-only 需要同时指定 --index 目录")
     args.data_dir.mkdir(parents=True, exist_ok=True)
     os.environ["HF_HUB_OFFLINE"] = "1"
     os.environ["TRANSFORMERS_OFFLINE"] = "1"
@@ -51,7 +54,7 @@ def main():
         try:
             output = {}
             if args.index:
-                output["index"] = engine.index(args.index)
+                output["index"] = engine.index(args.index, images_only=args.images_only)
             if args.query:
                 output["results"] = engine.search(args.query, mode=args.mode)
             if args.transcribe:

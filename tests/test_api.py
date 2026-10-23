@@ -204,3 +204,48 @@ def test_ui_job_cleanup_and_cancel_only_for_index(tmp_path, monkeypatch):
     window.close()
     window.deleteLater()
     app.processEvents()
+
+
+def test_ui_image_stage_can_search_before_completing_all_content(tmp_path, monkeypatch):
+    monkeypatch.setenv("QT_QPA_PLATFORM", "offscreen")
+    pytest.importorskip("PySide6")
+    from PySide6.QtWidgets import QApplication
+    from free_search.ui import SearchWindow
+
+    app = QApplication.instance() or QApplication([])
+    jobs = []
+    monkeypatch.setattr(SearchWindow, "start_job",
+                        lambda self, label, action, completed, **kwargs: jobs.append((action, completed, kwargs)))
+    window = SearchWindow(tmp_path, tmp_path / "models", "offline")
+    window.roots.addItem(str(tmp_path / "photos"))
+    modes = []
+
+    class Engine:
+        def index(self, roots, progress, images_only):
+            modes.append(images_only)
+            stats = dict(discovered=10, processed=2, unchanged=1, failed=0, deferred=7)
+            progress({**stats, "current_file": "photo.png", "phase": "图片编码 0/1"})
+            return stats
+
+    monkeypatch.setattr(window, "with_engine", lambda action: action(Engine()))
+    try:
+        window.image_index_button.click()
+        action, completed, options = jobs[-1]
+        assert options["cancellable"]
+        messages = []
+        completed(action(messages.append))
+        assert modes == [True]
+        assert "photo.png" in messages[-1]
+        assert "可以先搜索照片" in window.status.text()
+        window.set_busy(True)
+        assert not window.image_index_button.isEnabled()
+        window.set_busy(False)
+        assert window.search_button.isEnabled()
+        window.index_button.click()
+        action, completed, _ = jobs[-1]
+        completed(action(messages.append))
+        assert modes == [True, False]
+    finally:
+        window.close()
+        window.deleteLater()
+        app.processEvents()

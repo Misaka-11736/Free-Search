@@ -14,7 +14,7 @@ from filelock import FileLock, Timeout
 import jieba
 import numpy as np
 
-from .extractors import SUPPORTED_EXTENSIONS, Chunk, extract
+from .extractors import IMAGE_EXTENSIONS, SUPPORTED_EXTENSIONS, Chunk, extract
 from .models import LocalModels
 
 _LOCK = threading.RLock()
@@ -63,6 +63,7 @@ class SearchEngine:
           CREATE TABLE IF NOT EXISTS settings(key TEXT PRIMARY KEY,value TEXT);
         """)
         self._vectors = None
+        self._vector_generation_cache = {}
         self._available = self.models.availability()
         relevant = {k: info.get(k, model_key) for k in ("text-embedding", "vision", "speech")}
         capabilities = {k: v for k, v in self._available.items() if k != "text_reranker"}
@@ -85,11 +86,27 @@ class SearchEngine:
     def _vector_add(self, name, rows):
         if not rows:
             return
+        generations = self._vector_generations(name)
+        # Remember a possibly partial native write so a retry can remove it.
+        for row in rows:
+            generations.setdefault(row["file_id"], set()).add(row["generation"])
         table = self._table(name)
         if table is None:
             self.vectors.create_table(name, rows)
         else:
             table.add(rows)
+
+    def _vector_generations(self, name):
+        if name not in self._vector_generation_cache:
+            generations = {}
+            table = self._table(name)
+            if table is not None:
+                # Read only metadata, once per write run, including orphan staging rows.
+                for batch in table.search().select(["file_id", "generation"]).limit(None).to_batches():
+                    for row in batch.to_pylist():
+                        generations.setdefault(row["file_id"], set()).add(row["generation"])
+            self._vector_generation_cache[name] = generations
+        return self._vector_generation_cache[name]
 
     def optimize_vectors(self):
         """Append new rows to existing indexes; first ANN build only above threshold."""
@@ -110,12 +127,18 @@ class SearchEngine:
         if not (self._available.get("text_embedding") or self._available.get("vision")):
             return
         for name in ("text", "vision"):
-            table = self._table(name)
-            if table is not None:
-                condition = f"file_id = '{file_id}'"
-                if keep_generation:
-                    condition += f" AND generation != '{keep_generation}'"
-                table.delete(condition)
+            generations = self._vector_generations(name)
+            existing = generations.get(file_id, set())
+            removing = existing - {keep_generation}
+            if not removing:
+                continue
+            condition = f"file_id = '{file_id}'"
+            if keep_generation:
+                condition += f" AND generation != '{keep_generation}'"
+            self._table(name).delete(condition)
+            existing.difference_update(removing)
+            if not existing:
+                generations.pop(file_id, None)
 
     @contextmanager
     def _writer(self):
@@ -125,17 +148,18 @@ class SearchEngine:
         except Timeout:
             raise RuntimeError("另一个 Free Search 实例正在更新此索引，请等待其完成后重试。") from None
         try:
+            self._vector_generation_cache = {}
             yield
         finally:
             lock.release()
 
-    def index(self, roots: list[str], progress=None) -> dict:
+    def index(self, roots: list[str], progress=None, images_only=False) -> dict:
         with self._writer():
-            return self._index(roots, progress)
+            return self._index(roots, progress, images_only)
 
-    def _index(self, roots, progress):
+    def _index(self, roots, progress, images_only):
         stats = dict(discovered=0, processed=0, unchanged=0, deleted=0, failed=0,
-                     unsupported=0, embedded_chunks=0, enumeration_errors=0)
+                     unsupported=0, deferred=0, embedded_chunks=0, enumeration_errors=0)
         roots = list(dict.fromkeys(str(Path(r).resolve()) for r in roots))
         self.db.execute("INSERT OR REPLACE INTO settings VALUES('roots',?)", (json.dumps(roots),))
         self.db.commit()
@@ -153,9 +177,14 @@ class SearchEngine:
                     path = Path(folder, name)
                     if path.is_symlink() or path.is_relative_to(self.data_dir):
                         continue
+                    stats["discovered"] += 1
+                    if images_only and path.suffix.lower() not in IMAGE_EXTENSIONS:
+                        stats["deferred"] += 1
+                        if progress and stats["discovered"] % 250 == 0:
+                            progress(dict(stats))
+                        continue
                     key = digest(os.path.normcase(str(path)))
                     seen.add(key)
-                    stats["discovered"] += 1
                     if path.suffix.lower() not in SUPPORTED_EXTENSIONS:
                         stats["unsupported"] += 1
                         try:
@@ -167,9 +196,13 @@ class SearchEngine:
                         continue
                     with _LOCK:
                         try:
-                            changed, embedded = self._index_file(path, root, key)
+                            report = (lambda phase: progress(dict(stats, current_file=str(path), phase=phase))) if progress else None
+                            changed, embedded = self._index_file(path, root, key, progress=report)
                             stats["processed" if changed else "unchanged"] += 1
                             stats["embedded_chunks"] += embedded
+                        except InterruptedError:
+                            self.db.rollback()
+                            raise
                         except Exception as exc:
                             self.db.rollback()
                             stats["failed"] += 1
@@ -183,7 +216,9 @@ class SearchEngine:
             stats["enumeration_errors"] += len(walk_errors)
             if not walk_errors:
                 with _LOCK:
-                    for old in self.db.execute("SELECT id FROM files WHERE root=?", (root,)).fetchall():
+                    for old in self.db.execute("SELECT id,path FROM files WHERE root=?", (root,)).fetchall():
+                        if images_only and Path(old["path"]).suffix.lower() not in IMAGE_EXTENSIONS:
+                            continue
                         if old["id"] not in seen:
                             self.db.execute("DELETE FROM chunks WHERE file_id=?", (old["id"],))
                             self.db.execute("DELETE FROM files WHERE id=?", (old["id"],))
@@ -234,7 +269,7 @@ class SearchEngine:
             self.optimize_vectors()
         return stats
 
-    def _index_file(self, path, root, key):
+    def _index_file(self, path, root, key, progress=None):
         before = path.stat()
         old = self.db.execute("SELECT * FROM files WHERE id=?", (key,)).fetchone()
         if (old and old["status"] == "ready" and old["size"] == before.st_size
@@ -249,10 +284,14 @@ class SearchEngine:
             return False, 0
         generation = digest(checksum + self.model_state)
         # Staging vectors are invisible until their chunk IDs have been committed to SQLite.
+        if progress:
+            progress("读取内容")
         chunks = [Chunk(path.name, "文件名", "metadata")] + extract(
             path, self.data_dir / "assets" / key, self.models)
         rows, text_rows, visual_rows = [], [], []
         for n, chunk in enumerate(chunks):
+            if progress and n % 256 == 0:
+                progress(f"整理内容 {n}/{len(chunks)}")
             chunk_id = digest(key + generation + str(n))
             rows.append((chunk_id, key, chunk.text, tokenize(chunk.text), chunk.locator,
                          chunk.modality, str(chunk.asset_path) if chunk.asset_path else None))
@@ -265,17 +304,29 @@ class SearchEngine:
         for batch_rows, model, table_name in (
                 (text_rows, self.models.embed_text, "text"),
                 (visual_rows, self.models.embed_images, "vision")):
+            if not batch_rows:
+                continue
+            generations = self._vector_generations(table_name).get(key, set())
+            # Remove an interrupted attempt once per file, keeping the committed
+            # older generation visible until SQLite switches to the new one.
+            if generation in generations:
+                self._table(table_name).delete(f"file_id = '{key}' AND generation = '{generation}'")
+                generations.discard(generation)
+            pending = []
             for start in range(0, len(batch_rows), 16):
+                if progress:
+                    label = "文字" if table_name == "text" else "图片"
+                    progress(f"{label}编码 {start}/{len(batch_rows)}")
                 batch = batch_rows[start:start + 16]
                 vectors = model([r["input"] for r in batch])
-                records = [{k: v for k, v in r.items() if k != "input"} | {"vector": v.tolist()}
-                           for r, v in zip(batch, vectors)]
-                # Delete an interrupted attempt of this same generation before retrying.
-                table = self._table(table_name)
-                if table is not None:
-                    ids = ",".join("'" + r["id"] + "'" for r in records)
-                    table.delete(f"id IN ({ids})")
-                self._vector_add(table_name, records)
+                pending.extend({k: v for k, v in r.items() if k != "input"} | {"vector": v.tolist()}
+                               for r, v in zip(batch, vectors))
+                if len(pending) >= 256:
+                    self._vector_add(table_name, pending)
+                    pending = []
+            self._vector_add(table_name, pending)
+        if progress:
+            progress("提交文件索引")
         after = path.stat()
         if (before.st_size, before.st_mtime_ns) != (after.st_size, after.st_mtime_ns):
             raise RuntimeError("文件在解析期间变化，请重试")

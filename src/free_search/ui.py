@@ -32,7 +32,7 @@ class Job(QThread):
         try:
             def progress(*parts):
                 if self.isInterruptionRequested():
-                    raise InterruptedError("已暂停；再次更新索引将复用已完成的文件。")
+                    raise InterruptedError("已暂停；已完成文件仍可搜索，再次更新将复用它们。")
                 self.progress.emit(" · ".join(map(str, parts)))
             value = self.action(progress)
             self.result.emit(value)
@@ -196,10 +196,14 @@ class SearchWindow(QMainWindow):
         self.all_drives = QPushButton("添加所有固定磁盘")
         self.all_drives.clicked.connect(self.add_fixed_drives)
         side.addWidget(self.all_drives)
-        self.index_button = QPushButton("建立／增量更新索引")
+        self.image_index_button = QPushButton("先建图片索引（推荐）")
+        self.image_index_button.clicked.connect(lambda: self.index(images_only=True))
+        side.addWidget(self.image_index_button)
+        self.index_button = QPushButton("补齐全部内容／增量更新")
         self.index_button.clicked.connect(self.index)
         side.addWidget(self.index_button)
-        self.cancel_button = QPushButton("暂停索引（当前文件完成后）")
+        self.cancel_button = QPushButton("暂停索引")
+        self.cancel_button.setToolTip("在内容整理或模型编码批次间暂停；正在解析的文件需等解析返回。")
         self.cancel_button.setEnabled(False)
         self.cancel_button.clicked.connect(lambda: self.job.requestInterruption() if self.job else None)
         side.addWidget(self.cancel_button)
@@ -331,7 +335,7 @@ class SearchWindow(QMainWindow):
             if root not in self.root_paths():
                 self.roots.addItem(root)
         self.save_settings()
-        self.status.setText("已添加固定磁盘。点击增量更新开始处理，首次全盘索引可能需要较长时间。")
+        self.status.setText("已添加固定磁盘。可先建图片索引并搜索照片，再补齐全部内容；首次全盘处理需要较长时间。")
 
     def with_engine(self, action):
         from .engine import SearchEngine
@@ -382,7 +386,7 @@ class SearchWindow(QMainWindow):
     def set_busy(self, busy):
         self.cancel_button.setEnabled(False)
         for widget in [self.search_button, self.image_button, self.audio_button,
-                       self.index_button, self.add_root, self.remove_root, self.all_drives,
+                       self.image_index_button, self.index_button, self.add_root, self.remove_root, self.all_drives,
                        self.api_button, self.local_button]:
             widget.setEnabled(not busy)
         self.progress.setVisible(busy)
@@ -392,15 +396,34 @@ class SearchWindow(QMainWindow):
         self.status.setText(message)
         QMessageBox.warning(self, "操作未完成", message)
 
-    def index(self):
+    def index(self, images_only=False):
         roots = self.root_paths()
         if not roots:
             self.status.setText("请先添加索引目录。")
             return
+        stage = "图片索引" if images_only else "全部内容索引"
+
+        def action(progress):
+            def report(stats):
+                text = (f"{stage} · 已发现 {stats['discovered']} · 新建/更新 {stats['processed']}"
+                        f" · 复用 {stats['unchanged']} · 失败 {stats['failed']}")
+                if images_only:
+                    text += f" · 待补齐的其他文件 {stats.get('deferred', 0)}"
+                if stats.get("current_file"):
+                    text += f"\n{Path(stats['current_file']).name} · {stats.get('phase', '')}"
+                progress(text)
+            return self.with_engine(lambda engine: engine.index(roots, progress=report, images_only=images_only))
+
+        def completed(result):
+            message = f"{stage}完成：新建/更新 {result['processed']}，复用 {result['unchanged']}，失败 {result['failed']}。"
+            if images_only:
+                message += " 可以先搜索照片；点击“补齐全部内容／增量更新”继续处理文档和音视频。"
+            if result.get("enumeration_errors"):
+                message += f" 有 {result['enumeration_errors']} 处目录无法完整读取。"
+            self.status.setText(message)
+
         self.start_job(
-            "开始检查文件变化…",
-            lambda progress: self.with_engine(lambda engine: engine.index(roots, progress=progress)),
-            lambda result: self.status.setText("索引完成：" + json.dumps(result, ensure_ascii=False)),
+            f"开始{stage}，检查文件变化…", action, completed,
             cancellable=True,
         )
 
